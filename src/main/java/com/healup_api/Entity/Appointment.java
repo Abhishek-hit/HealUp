@@ -3,9 +3,11 @@ package com.healup_api.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -18,7 +20,7 @@ public class Appointment {
 
     @Id
     private String id;
-
+    @Indexed(unique = true)
     private String appointmentId;
     private String patientId;     // linked to Patient
     private String doctorId;      // linked to Doctor

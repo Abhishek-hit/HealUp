@@ -32,7 +32,7 @@ public class PatientController {
     public ResponseEntity<ApiResponse> login(@RequestBody Patient patient) {
         return patientService.LoginDcot (patient);
     }
-    //het by if
+    //get by if
     @GetMapping("/{patientId}")
     public ResponseEntity<ApiResponse> getPatient(@PathVariable String patientId) {
         return patientService.FindByID (patientId);
