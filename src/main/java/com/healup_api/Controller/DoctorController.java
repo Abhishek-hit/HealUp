@@ -44,8 +44,8 @@ public class DoctorController {
     public ResponseEntity<ApiResponse> getDoctorAppointments(@PathVariable String doctorId) {
         return doctorService.getAppointmentsByDoctor (doctorId);
     }
-    //set stust
 
+    //set status
     @PutMapping("/{appointmentId}/status/{status}")
     public ResponseEntity<ApiResponse> updateStatus(@PathVariable String appointmentId, @PathVariable String status) {
         return doctorService.updateStatus(appointmentId, status);

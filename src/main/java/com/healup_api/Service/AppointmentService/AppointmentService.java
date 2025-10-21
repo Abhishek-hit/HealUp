@@ -26,10 +26,10 @@ public class AppointmentService {
     public ResponseEntity<ApiResponse> bookAppointment(Appointment appt){
 
         //validate patient
-       boolean patientExixt=patientRepository.findByPatientId (appt.getPatientId ())!=null;
-       if (!patientExixt){
+       boolean patientExist=patientRepository.findByPatientId (appt.getPatientId ())!=null;
+       if (!patientExist){
            return ResponseEntity.badRequest ()
-                   .body (new ApiResponse ( false,"Invalid patient ID! Please register first.",patientExixt ));
+                   .body (new ApiResponse ( false,"Invalid patient ID! Please register first.",patientExist ));
        }
 
 
