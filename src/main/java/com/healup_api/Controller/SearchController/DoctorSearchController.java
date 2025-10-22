@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/doctors")
-public class DoctorSearchController {
+public class DoctorSearchController {  //http://localhost:8080/api/doctors/search?keyword=md
     @Autowired
     private DocotorSearchSerive docotorSearchSerive;
     @GetMapping("/search")
