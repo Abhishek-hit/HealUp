@@ -5,9 +5,12 @@ import com.healup_api.DTO.DoctorDTO;
 import com.healup_api.Entity.Appointment;
 import com.healup_api.Entity.Doctor;
 import com.healup_api.Entity.Patient;
+import com.healup_api.Entity.Prescription;
 import com.healup_api.Mapper.DoctorMapper;
 import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Repository.DoctorRespository;
+import com.healup_api.Repository.PatientRepository;
+import com.healup_api.Repository.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,9 @@ public class DoctorService {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private DoctorMapper doctorMapper;
-
+    @Autowired
+    private  PatientRepository patientRepository;
+    @Autowired private PrescriptionRepository prescriptionRepository;
 
     public ResponseEntity<ApiResponse> RegisterDoctor(Doctor doctor){
         doctor.setDoctorId ("DOC"+ UUID.randomUUID ().toString ().substring (0,6).toUpperCase (  ));
@@ -91,6 +96,20 @@ public class DoctorService {
         return ResponseEntity.ok(new ApiResponse(true, "Status updated to " + newStatus, updatedAppointment));
     }
 
+//Patient history check by doctor
+    public ResponseEntity<ApiResponse> PatientHistory(String PatientId){
+        List<Appointment> appointments=appointmentRepository.findByPatientId (PatientId);
+        if (appointments == null || appointments.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "No appointments found for this patient!", null));
+        }
 
+       for (Appointment appt:appointments){
+           Prescription prescription=prescriptionRepository.findByAppointmentId (appt.getAppointmentId ());
+           appt.setPrescription(prescription);
+       }
+           return ResponseEntity.ok(new ApiResponse(true, "Patient history fetched successfully", appointments));
+
+    }
 
 }

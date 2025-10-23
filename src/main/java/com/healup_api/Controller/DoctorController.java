@@ -50,5 +50,10 @@ public class DoctorController {
     public ResponseEntity<ApiResponse> updateStatus(@PathVariable String appointmentId, @PathVariable String status) {
         return doctorService.updateStatus(appointmentId, status);
     }
+    //history of patient
+    @GetMapping("/patient/history/{patientId}")
+    public ResponseEntity<ApiResponse> getPatientHistory(@PathVariable String patientId) {
+        return doctorService.PatientHistory (patientId);
+    }
 
 }
