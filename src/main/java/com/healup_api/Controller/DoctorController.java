@@ -1,12 +1,15 @@
 package com.healup_api.Controller;
 
 import com.healup_api.API_Response.ApiResponse;
+import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
 import com.healup_api.Entity.Appointment;
 import com.healup_api.Entity.Doctor;
+import com.healup_api.LoginRequests.LoginRequest;
 import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Service.AppointmentService.AppointmentService;
 import com.healup_api.Service.DoctorService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,23 +18,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class DoctorController {
     @Autowired
     private DoctorService doctorService;
     @Autowired
     private AppointmentService appointmentService;
     @PostMapping("/Reg")
-    public ResponseEntity<ApiResponse> RegisDoctor(  @RequestBody Doctor doctor){
-        return doctorService.RegisterDoctor (doctor);
+    public ResponseEntity<ApiResponse> RegisDoctor(  @RequestBody DoctorRegister register){
+        return doctorService.RegisterDoctor (register);
     }
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<ApiResponse> GetAllDoctor(){
         return doctorService.getDoctor ();
 
     }
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody Doctor doctor) {
-        return doctorService.LoginDcot (doctor);
+    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest loginRequest) {
+        return doctorService.LoginDoct(loginRequest);
     }
 
     @GetMapping("/{doctorId}")
@@ -54,6 +58,11 @@ public class DoctorController {
     @GetMapping("/patient/history/{patientId}")
     public ResponseEntity<ApiResponse> getPatientHistory(@PathVariable String patientId) {
         return doctorService.PatientHistory (patientId);
+    }
+    //forget password
+    @PutMapping("/forgot-password")
+    public ResponseEntity<ApiResponse> forgetPassword(@PathVariable String email,@PathVariable String newPashword){
+        return doctorService.forgetPassword (email,newPashword);
     }
 
 }

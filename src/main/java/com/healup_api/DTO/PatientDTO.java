@@ -1,5 +1,6 @@
 package com.healup_api.DTO;
 
+import com.healup_api.Entity.Patient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -32,10 +33,13 @@ public class PatientDTO {
     private String phone;
     private LocalDate dob;
     private String gender;
-    private Map<String, String> address; // line1, city, state, pincode
-    private List<String> medicalRecords;
+    private Map<String, String> address;// line1, city, state, pincode isko bhi custom banana pada kiyu ki
+    // JS request/response expect karta hai object, lekin backend String de raha tha.
+//    private List<String> medicalRecords;
     private String blood_group;
     private String allergies;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
 }

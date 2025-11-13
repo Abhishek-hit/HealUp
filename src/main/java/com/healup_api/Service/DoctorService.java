@@ -1,11 +1,14 @@
 package com.healup_api.Service;
 
 import com.healup_api.API_Response.ApiResponse;
-import com.healup_api.DTO.DoctorDTO;
+
+import com.healup_api.DTO.DoctorDTOS.DoctorProfileResponse;
+import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
 import com.healup_api.Entity.Appointment;
 import com.healup_api.Entity.Doctor;
 import com.healup_api.Entity.Patient;
 import com.healup_api.Entity.Prescription;
+import com.healup_api.LoginRequests.LoginRequest;
 import com.healup_api.Mapper.DoctorMapper;
 import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Repository.DoctorRespository;
@@ -16,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -30,32 +34,33 @@ public class DoctorService {
     private  PatientRepository patientRepository;
     @Autowired private PrescriptionRepository prescriptionRepository;
 
-    public ResponseEntity<ApiResponse> RegisterDoctor(Doctor doctor){
+    public ResponseEntity<ApiResponse> RegisterDoctor(DoctorRegister dto){
+        Doctor doctor=doctorMapper.toEntity(dto);
         doctor.setDoctorId ("DOC"+ UUID.randomUUID ().toString ().substring (0,6).toUpperCase (  ));
-        Doctor doctorSave=doctorRespository.save (doctor);
-        //use doctor dto
-        DoctorDTO doctorDTOdata=doctorMapper.toDto (doctorSave);
-
-        return ResponseEntity.ok (new ApiResponse (true,"Doctor created successfully",doctorDTOdata ));
+        doctor.setRoles ("ROLE_DOCTOR");
+        Doctor  saveDoctor= doctorRespository.save (doctor);
+        //use doctor Response
+        DoctorProfileResponse doctorProfileResponse=doctorMapper.toResponseDTO (saveDoctor);
+        return ResponseEntity.ok (new ApiResponse (true,"Doctor created successfully",doctorProfileResponse ));
 
     }
-
+//get all doctor
     public ResponseEntity<ApiResponse> getDoctor(){
         List<Doctor> getall= doctorRespository.findAll ();
 
-        List<DoctorDTO> dtoList=getall //this is list
+        List<DoctorProfileResponse> dtoList=getall //this is list
                 .stream( ) //and convert in stream
-                .map (doctorMapper::toDto) //convert every docot obj into doctordto
+                .map (doctorMapper::toResponseDTO) //convert every docot obj into doctordto
                 .toList ();//phir stream ko wapas list me convert kia gya h
 
         return ResponseEntity.ok (new ApiResponse (true,"All doctor information get successfully",dtoList ));
     }
 
     //login
-    public ResponseEntity<ApiResponse> LoginDcot(Doctor doctor){
-        Doctor doctors=doctorRespository.findByEmail (doctor.getEmail ( ));
-        DoctorDTO loginDto=doctorMapper.toDto (doctors);
-        if (doctors!=null&&doctor.getPasswordHash ().equals (doctors.getPasswordHash ())){
+    public ResponseEntity<ApiResponse> LoginDoct(LoginRequest loginRequest){
+        Doctor doctors=doctorRespository.findByEmail (loginRequest.getEmail ( ));
+        DoctorProfileResponse loginDto=doctorMapper.toResponseDTO (doctors);
+        if (doctors!=null&&loginRequest.getPassword().equals(doctors.getPasswordHash())){
             return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto ));
 
         }
@@ -71,7 +76,7 @@ public class DoctorService {
     //find doctor by id
     public ResponseEntity<ApiResponse> FindByIDdoctor(String doctorId){
         Doctor DoctorId=doctorRespository.findByDoctorId (doctorId);
-        DoctorDTO DoctorIdDto=doctorMapper.toDto (DoctorId);//USE doctor Dto
+        DoctorProfileResponse DoctorIdDto=doctorMapper.toResponseDTO (DoctorId);//USE doctor Dto
         if (DoctorId!=null){
             return ResponseEntity.ok ( new ApiResponse ( true,"find by id succesfully",DoctorIdDto) );
         }
@@ -112,4 +117,16 @@ public class DoctorService {
 
     }
 
+    //forget passoward
+    public ResponseEntity<ApiResponse> forgetPassword(String email,String newpassword){
+        Doctor doctorForget=doctorRespository.findByEmail (email);
+        if (doctorForget==null){
+            ResponseEntity.badRequest()
+                .body(new ApiResponse(false, "No doctor found with this email!", null));
+        }
+       doctorForget.setPasswordHash (newpassword);
+        doctorRespository.save (doctorForget);
+      return ResponseEntity.ok(new ApiResponse(true, "Password reset successful!", doctorForget));
+
+    }
 }

@@ -1,7 +1,8 @@
 package com.healup_api.Service.SearchService;
 
 import com.healup_api.API_Response.ApiResponse;
-import com.healup_api.DTO.DoctorDTO;
+
+import com.healup_api.DTO.DoctorDTOS.DoctorProfileResponse;
 import com.healup_api.Entity.Doctor;
 import com.healup_api.Mapper.DoctorMapper;
 import com.healup_api.Repository.DoctorRespository;
@@ -12,14 +13,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DocotorSearchSerive {
+public class DocotorSearchService {
     @Autowired
     private DoctorRespository doctorRespository;
     @Autowired private DoctorMapper doctorMapper;
     public ResponseEntity<ApiResponse> SearchDoctor(String keyword){
         List<Doctor> doctors=doctorRespository.searchDoctor (keyword);
 
-      List<DoctorDTO> doctorDTO=doctors.stream ().map (doctorMapper::toDto).toList ();
+      List<DoctorProfileResponse> doctorDTO=doctors.stream ().map (doctorMapper::toResponseDTO).toList ();
         if (doctors.isEmpty ()){
             return ResponseEntity.ok (new ApiResponse (false,"Doctor not found"+keyword,null));
         }

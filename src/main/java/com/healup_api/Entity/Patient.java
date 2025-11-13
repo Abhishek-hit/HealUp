@@ -50,8 +50,8 @@ public class Patient {
     @NotBlank(message = "gender is required")
     private String gender;
 
-    private Map<String, String> address; // line1, city, state, pincode
-    private List<String> medicalRecords;
+ private Map<String, String> address;// line1, city, state, pincode
+   // private List<String> medicalRecords;
 
     @Field("blood_group")
     private String blood_group;
@@ -70,5 +70,6 @@ public class Patient {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
-//
+
+
 }

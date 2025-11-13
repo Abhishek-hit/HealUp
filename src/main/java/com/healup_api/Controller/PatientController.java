@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("Api")
+@RequestMapping("/Api")
+@CrossOrigin(origins = "*")
 public class PatientController {
     @Autowired
     private PatientService patientService;

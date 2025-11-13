@@ -26,20 +26,20 @@ public class Doctor {
     @Indexed(unique = true)
     private String doctorId;
 
-    @NotBlank(message = "Doctor's name is required")
-    @Size(min = 3, message = "Name must be at least 3 characters long")
+//    @NotBlank(message = "Doctor's name is required")
+//    @Size(min = 3, message = "Name must be at least 3 characters long")
     private String name;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please provide a valid email address")
-    @Indexed(unique = true)
+//    @NotBlank(message = "Email is required")
+//    @Email(message = "Please provide a valid email address")
+//    @Indexed(unique = true)
     private String email;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
+//    @NotBlank(message = "Phone number is required")
+//    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
     private String phone;
-
-    @NotBlank(message = "Specialization is required")
+//
+//    @NotBlank(message = "Specialization is required")
     private List<String> speciality;
     private List<String> degrees;
     private Map<String, Object> clinicAddress; // line1, city, lat, lng
@@ -47,11 +47,12 @@ public class Doctor {
     private double rating;
     private List<String> tags;
     private List<Map<String, String>> availability;
+    private String roles;
 
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Field("password_hash") //field ka nam hogaa
+//    @NotBlank(message = "Password is required")
+//    @Size(min = 8, message = "Password must be at least 8 characters long")
+   @Field("password_hash") //field ka nam hogaa
     private String passwordHash;
 
     private String gender;
