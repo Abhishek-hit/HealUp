@@ -1,17 +1,13 @@
 package com.healup_api.Controller;
 
+
 import com.healup_api.API_Response.ApiResponse;
-import com.healup_api.Entity.Appointment;
-import com.healup_api.Entity.Doctor;
-import com.healup_api.Entity.Patient;
-import com.healup_api.Repository.AppointmentRepository;
+import com.healup_api.DTO.PatientDTO.PatientRegister;
+import com.healup_api.LoginRequests.LoginRequest;
 import com.healup_api.Service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.web.ReactiveOffsetScrollPositionHandlerMethodArgumentResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/Api")
@@ -21,7 +17,7 @@ public class PatientController {
     private PatientService patientService;
 
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addpatient(@RequestBody Patient patient){
+    public ResponseEntity<ApiResponse> addpatient(@RequestBody PatientRegister patient){
         return patientService.AddPatient (patient);
     }
 
@@ -30,7 +26,7 @@ public class PatientController {
         return patientService.getPatient ();
     }
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody Patient patient) {
+    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest patient) {
         return patientService.LoginDcot (patient);
     }
     //get by id

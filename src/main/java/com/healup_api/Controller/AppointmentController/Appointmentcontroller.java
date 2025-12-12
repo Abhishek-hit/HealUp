@@ -1,6 +1,7 @@
 package com.healup_api.Controller.AppointmentController;
 
 import com.healup_api.API_Response.ApiResponse;
+import com.healup_api.DTO.AppoinmentDTO.AppointmentRequest;
 import com.healup_api.Entity.Appointment;
 import com.healup_api.Service.AppointmentService.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class Appointmentcontroller {
     private AppointmentService appointmentService;
 
     @PostMapping("/book")
-    public ResponseEntity<ApiResponse> book(@RequestBody Appointment appt) {
+    public ResponseEntity<ApiResponse> book(@RequestBody AppointmentRequest appt) {
         return appointmentService.bookAppointment (appt);
     }
 

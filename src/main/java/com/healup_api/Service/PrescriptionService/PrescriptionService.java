@@ -33,7 +33,7 @@ public class PrescriptionService {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse(false, "Prescription already exists for this appointment!", null));
         }
-        //auto fill doc and patient id
+        //autofill doc and patient id
         appointmentid.setDoctorId (appt.getDoctorId ());
         appointmentid.setPatientId (appt.getPatientId ());
         appointmentid.setCreatedAt (LocalDateTime.now ());

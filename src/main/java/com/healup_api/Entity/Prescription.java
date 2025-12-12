@@ -17,7 +17,7 @@ public class Prescription {
 
     @Id
     private String id;
-    private String appointmentId;   // 🔗 Link with appointment
+    private String appointmentId;   // Link with appointment
     private String doctorId;
     private String patientId;
     private String doctorname;

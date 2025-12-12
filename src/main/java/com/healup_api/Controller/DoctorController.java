@@ -2,19 +2,13 @@ package com.healup_api.Controller;
 
 import com.healup_api.API_Response.ApiResponse;
 import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
-import com.healup_api.Entity.Appointment;
-import com.healup_api.Entity.Doctor;
 import com.healup_api.LoginRequests.LoginRequest;
-import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Service.AppointmentService.AppointmentService;
 import com.healup_api.Service.DoctorService;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

@@ -31,23 +31,19 @@ public class Patient {
     @Indexed(unique = true)
    private String patientId;
 
-    @NotBlank(message = "Patient's name is required")
-    @Size(min = 3, message = "Name must be at least 3 characters long")
+
     private String firstName;
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please provide a valid email address")
-    @Indexed(unique = true)
+
     private String email;
 
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
+
     private String phone;
 
     private LocalDate dob;
-    @NotBlank(message = "gender is required")
+
     private String gender;
 
  private Map<String, String> address;// line1, city, state, pincode
@@ -56,13 +52,13 @@ public class Patient {
     @Field("blood_group")
     private String blood_group;
 
-    @NotBlank(message = "Allergies is required")
+
     private String allergies;
+    private String roles;
 
 
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
+
     @Field("password_hash") //field ka nam hogaa
     private String passwordHash;
     @CreatedDate

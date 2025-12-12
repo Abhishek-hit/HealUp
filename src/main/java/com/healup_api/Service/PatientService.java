@@ -1,10 +1,12 @@
 package com.healup_api.Service;
 
 import com.healup_api.API_Response.ApiResponse;
-import com.healup_api.DTO.PatientDTO;
+import com.healup_api.DTO.PatientDTO.PatientRegister;
+import com.healup_api.DTO.PatientDTO.PatientResponse;
 import com.healup_api.Entity.Appointment;
 import com.healup_api.Entity.Doctor;
 import com.healup_api.Entity.Patient;
+import com.healup_api.LoginRequests.LoginRequest;
 import com.healup_api.Mapper.PatientMapper;
 import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Repository.PatientRepository;
@@ -24,31 +26,32 @@ public class PatientService {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private PatientMapper patientMapper;
-    public ResponseEntity<ApiResponse> AddPatient(Patient patient){
+    public ResponseEntity<ApiResponse> AddPatient(PatientRegister dto){
+        Patient patient=patientMapper.toEntity (dto);
         patient.setPatientId("P"+ UUID.randomUUID ().toString ().substring (0,6).toUpperCase (  ));
-
+        patient.setRoles ("ROLE_PATIENT");
         Patient patientdata=patientRepository.save (patient);//use mapper
 
-        PatientDTO patientDto=patientMapper.toDto (patientdata);
+        PatientResponse patientDto=patientMapper.toResponseDTO (patientdata);
         return ResponseEntity.ok (new ApiResponse ( true,"Patient created",patientDto ));
 
     }
 
     public ResponseEntity<ApiResponse> getPatient(){
         List<Patient> patientsData=patientRepository.findAll ();
-        List<PatientDTO> patientDTOS=patientsData
+        List<PatientResponse> patientDTOS=patientsData
                 .stream ()
-                .map (patientMapper::toDto)
+                .map (patientMapper::toResponseDTO)
                 .toList (); //USE DTOS
         return ResponseEntity.ok (new ApiResponse ( true,"Patient information",patientDTOS ));
 
     }
 
     //login
-    public ResponseEntity<ApiResponse> LoginDcot(Patient patient){
-        Patient patientData=patientRepository.findByEmail (patient.getEmail ( ));
-        PatientDTO loginDto=patientMapper.toDto (patientData);//use dto mapper
-        if (patientData!=null&&patient.getPasswordHash ().equals (patientData.getPasswordHash ())){
+    public ResponseEntity<ApiResponse> LoginDcot(LoginRequest loginRequest){
+        Patient patientData=patientRepository.findByEmail (loginRequest.getEmail ( ));
+        PatientResponse loginDto=patientMapper.toResponseDTO (patientData);//use dto mapper
+        if (patientData!=null&&loginRequest.getPassword ().equals (patientData.getPasswordHash ())){
             return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto));
 
         }
@@ -63,7 +66,7 @@ public class PatientService {
     //search by patient id
     public ResponseEntity<ApiResponse> FindByID(String patientId){
         Patient PatientId=patientRepository.findByPatientId (patientId);
-        PatientDTO patientIdDTO=patientMapper.toDto (PatientId);
+        PatientResponse patientIdDTO=patientMapper.toResponseDTO (PatientId);
 
        if (PatientId!=null){
            return ResponseEntity.ok ( new ApiResponse ( true,"find by id succesfully",patientIdDTO) );
