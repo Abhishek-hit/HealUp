@@ -117,16 +117,5 @@ public class DoctorService {
 
     }
 
-    //forget passoward
-    public ResponseEntity<ApiResponse> forgetPassword(String email,String newpassword){
-        Doctor doctorForget=doctorRespository.findByEmail (email);
-        if (doctorForget==null){
-            ResponseEntity.badRequest()
-                .body(new ApiResponse(false, "No doctor found with this email!", null));
-        }
-       doctorForget.setPasswordHash (newpassword);
-        doctorRespository.save (doctorForget);
-      return ResponseEntity.ok(new ApiResponse(true, "Password reset successful!", doctorForget));
 
-    }
 }

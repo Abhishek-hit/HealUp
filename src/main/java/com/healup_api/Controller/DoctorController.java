@@ -2,6 +2,9 @@ package com.healup_api.Controller;
 
 import com.healup_api.API_Response.ApiResponse;
 import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
+import com.healup_api.ForgetPassword.ForgetPassword;
+import com.healup_api.ForgetPassword.PasswordResetService;
+import com.healup_api.ForgetPassword.ResetPasswordRequest;
 import com.healup_api.LoginRequests.LoginRequest;
 import com.healup_api.Service.AppointmentService.AppointmentService;
 import com.healup_api.Service.DoctorService;
@@ -18,6 +21,8 @@ public class DoctorController {
     private DoctorService doctorService;
     @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private  PasswordResetService passwordResetService;
     @PostMapping("/Reg")
     public ResponseEntity<ApiResponse> RegisDoctor(  @RequestBody DoctorRegister register){
         return doctorService.RegisterDoctor (register);
@@ -53,10 +58,8 @@ public class DoctorController {
     public ResponseEntity<ApiResponse> getPatientHistory(@PathVariable String patientId) {
         return doctorService.PatientHistory (patientId);
     }
-    //forget password
-    @PutMapping("/forgot-password")
-    public ResponseEntity<ApiResponse> forgetPassword(@PathVariable String email,@PathVariable String newPashword){
-        return doctorService.forgetPassword (email,newPashword);
-    }
+
+
+
 
 }
