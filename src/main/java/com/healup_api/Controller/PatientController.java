@@ -25,10 +25,10 @@ public class PatientController {
     public ResponseEntity<ApiResponse> GetPatient(){
         return patientService.getPatient ();
     }
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest patient) {
-        return patientService.LoginDcot (patient);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest patient) {
+//        return patientService.LoginDcot (patient);
+//    }
     //get by id
     @GetMapping("/{patientId}")
     public ResponseEntity<ApiResponse> getPatient(@PathVariable String patientId) {

@@ -32,10 +32,10 @@ public class DoctorController {
         return doctorService.getDoctor ();
 
     }
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest loginRequest) {
-        return doctorService.LoginDoct(loginRequest);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest loginRequest) {
+//        return doctorService.LoginDoct(loginRequest);
+//    }
 
     @GetMapping("/{doctorId}")
     public ResponseEntity<ApiResponse> getDoctor(@PathVariable String doctorId) {

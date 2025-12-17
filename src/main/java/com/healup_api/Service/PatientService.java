@@ -12,6 +12,7 @@ import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,10 +27,12 @@ public class PatientService {
     private AppointmentRepository appointmentRepository;
     @Autowired
     private PatientMapper patientMapper;
+    @Autowired private PasswordEncoder passwordEncoder;
     public ResponseEntity<ApiResponse> AddPatient(PatientRegister dto){
         Patient patient=patientMapper.toEntity (dto);
         patient.setPatientId("P"+ UUID.randomUUID ().toString ().substring (0,6).toUpperCase (  ));
-        patient.setRoles ("ROLE_PATIENT");
+        patient.setRoles ("PATIENT");
+        patient.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
         Patient patientdata=patientRepository.save (patient);//use mapper
 
         PatientResponse patientDto=patientMapper.toResponseDTO (patientdata);
@@ -48,21 +51,21 @@ public class PatientService {
     }
 
     //login
-    public ResponseEntity<ApiResponse> LoginDcot(LoginRequest loginRequest){
-        Patient patientData=patientRepository.findByEmail (loginRequest.getEmail ( ));
-        PatientResponse loginDto=patientMapper.toResponseDTO (patientData);//use dto mapper
-        if (patientData!=null&&loginRequest.getPassword ().equals (patientData.getPasswordHash ())){
-            return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto));
-
-        }
-        else {
-            return ResponseEntity
-                    .status(401) // Unauthorized
-                    .body(new ApiResponse(false, "Invalid credentials or user not found", null));
-
-        }
-
-    }
+//    public ResponseEntity<ApiResponse> LoginDcot(LoginRequest loginRequest){
+//        Patient patientData=patientRepository.findByEmail (loginRequest.getEmail ( ));
+//        PatientResponse loginDto=patientMapper.toResponseDTO (patientData);//use dto mapper
+//        if (patientData!=null&&loginRequest.getPassword ().equals (patientData.getPasswordHash ())){
+//            return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto));
+//
+//        }
+//        else {
+//            return ResponseEntity
+//                    .status(401) // Unauthorized
+//                    .body(new ApiResponse(false, "Invalid credentials or user not found", null));
+//
+//        }
+//
+//    }
     //search by patient id
     public ResponseEntity<ApiResponse> FindByID(String patientId){
         Patient PatientId=patientRepository.findByPatientId (patientId);

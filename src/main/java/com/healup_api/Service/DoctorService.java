@@ -16,6 +16,7 @@ import com.healup_api.Repository.PatientRepository;
 import com.healup_api.Repository.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,13 +34,16 @@ public class DoctorService {
     @Autowired
     private  PatientRepository patientRepository;
     @Autowired private PrescriptionRepository prescriptionRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<ApiResponse> RegisterDoctor(DoctorRegister dto){
         Doctor doctor=doctorMapper.toEntity(dto);
         doctor.setDoctorId ("DOC"+ UUID.randomUUID ().toString ().substring (0,6).toUpperCase (  ));
-        doctor.setRoles ("ROLE_DOCTOR");
+        doctor.setRoles ("DOCTOR");
+        doctor.setPasswordHash(passwordEncoder.encode(dto.getPasswordHash()));
         Doctor  saveDoctor= doctorRespository.save (doctor);
         //use doctor Response
+
         DoctorProfileResponse doctorProfileResponse=doctorMapper.toResponseDTO (saveDoctor);
         return ResponseEntity.ok (new ApiResponse (true,"Doctor created successfully",doctorProfileResponse ));
 
@@ -57,21 +61,21 @@ public class DoctorService {
     }
 
     //login
-    public ResponseEntity<ApiResponse> LoginDoct(LoginRequest loginRequest){
-        Doctor doctors=doctorRespository.findByEmail (loginRequest.getEmail ( ));
-        DoctorProfileResponse loginDto=doctorMapper.toResponseDTO (doctors);
-        if (doctors!=null&&loginRequest.getPassword().equals(doctors.getPasswordHash())){
-            return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto ));
-
-        }
-        else {
-            return ResponseEntity
-                    .status(401) // Unauthorized
-                    .body(new ApiResponse(false, "Invalid credentials or user not found", null));
-
-        }
-
-    }
+//    public ResponseEntity<ApiResponse> LoginDoct(LoginRequest loginRequest){
+//        Doctor doctors=doctorRespository.findByEmail (loginRequest.getEmail ( ));
+//        DoctorProfileResponse loginDto=doctorMapper.toResponseDTO (doctors);
+//        if (doctors!=null&&loginRequest.getPassword().equals(doctors.getPasswordHash())){
+//            return ResponseEntity.ok(new ApiResponse ( true,"login succesfullly",loginDto ));
+//
+//        }
+//        else {
+//            return ResponseEntity
+//                    .status(401) // Unauthorized
+//                    .body(new ApiResponse(false, "Invalid credentials or user not found", null));
+//
+//        }
+//
+//    }
 
     //find doctor by id
     public ResponseEntity<ApiResponse> FindByIDdoctor(String doctorId){
