@@ -12,6 +12,7 @@ import com.healup_api.Repository.AppointmentRepository;
 import com.healup_api.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,17 @@ public class PatientService {
                 .toList (); //USE DTOS
         return ResponseEntity.ok (new ApiResponse ( true,"Patient information",patientDTOS ));
 
+    }
+
+    public ResponseEntity<ApiResponse> MyProfile(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();//
+        Patient PatientProfile=patientRepository.findByEmail (email);
+        PatientResponse patient=patientMapper.toResponseDTO (PatientProfile);
+
+        if (patient!=null){
+            return ResponseEntity.ok ( new ApiResponse ( true,"find by id succesfully",patient) );
+        }
+        return ResponseEntity.status(404).body(new ApiResponse(false, "Patient not found", null));
     }
 
     //login

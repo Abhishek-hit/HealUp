@@ -35,7 +35,10 @@ public class CustomUserDetailsService implements UserDetailsService{
                     Collections.singletonList(new SimpleGrantedAuthority ("ROLE_DOCTOR"))
             );
         }
-
+        // Dynamic role load karein aur "ROLE_" prefix lagayein
+//        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole))
+// Database se role nikaalein (e.g., "PATIENT" ya "ADMIN")
+//        String userRole = patient.getRole();
         // 2. Check Patient Table
         Patient patient = patientRepository.findByEmail(email);
         if (patient != null) {

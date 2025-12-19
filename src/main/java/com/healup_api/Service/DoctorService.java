@@ -16,6 +16,7 @@ import com.healup_api.Repository.PatientRepository;
 import com.healup_api.Repository.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -77,19 +78,37 @@ public class DoctorService {
 //
 //    }
 
-    //find doctor by id
+    //doctor find own profile only
+    public ResponseEntity<ApiResponse> getMyProfile(){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();//own id can search only
+        Doctor Doctor=doctorRespository.findByEmail (email);
+        // DEBUG LINE: Console me check kar ki email kya aa raha hai
+        System.out.println("Checking Profile for Email: " + email);
+        DoctorProfileResponse DoctorDto=doctorMapper.toResponseDTO (Doctor);//USE doctor Dto
+        if (Doctor!=null){
+            return ResponseEntity.ok ( new ApiResponse ( true,"find by id succesfully",DoctorDto) );
+        }
+        return ResponseEntity.status(404).body(new ApiResponse(false, "Doctor not found", null));
+    }
+    //find by id only
     public ResponseEntity<ApiResponse> FindByIDdoctor(String doctorId){
-        Doctor DoctorId=doctorRespository.findByDoctorId (doctorId);
-        DoctorProfileResponse DoctorIdDto=doctorMapper.toResponseDTO (DoctorId);//USE doctor Dto
-        if (DoctorId!=null){
-            return ResponseEntity.ok ( new ApiResponse ( true,"find by id succesfully",DoctorIdDto) );
+        Doctor doctor = doctorRespository.findByDoctorId(doctorId);
+        if (doctor != null){
+            return ResponseEntity.ok(new ApiResponse(true, "Doctor found", doctorMapper.toResponseDTO(doctor)));
         }
         return ResponseEntity.status(404).body(new ApiResponse(false, "Doctor not found", null));
     }
 
     // doctor will get patient appointment
-    public ResponseEntity<ApiResponse> getAppointmentsByDoctor(String doctorId) {
-        List<Appointment> list =appointmentRepository.findByDoctorId(doctorId);
+    public ResponseEntity<ApiResponse> getAppointmentsByDoctor() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        // 2. Doctor find karo
+        Doctor doctor = doctorRespository.findByEmail(email);
+
+        if (doctor == null) {
+            return ResponseEntity.status(404).body(new ApiResponse(false, "Doctor not found", null));
+        }
+        List<Appointment> list =appointmentRepository.findByDoctorId(doctor.getDoctorId ( ));
         return ResponseEntity.ok(new ApiResponse(true, "Doctor appointments fetched", list));
     }
 

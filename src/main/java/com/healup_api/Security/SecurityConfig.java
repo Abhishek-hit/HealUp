@@ -31,13 +31,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
                         // Public URLs (No Token Needed)
                         .requestMatchers("/api/auth/login").permitAll()// Patient Reg/Login
+                        .requestMatchers ("/Api/Reg").permitAll ()
                         .requestMatchers ("/api/Reg").permitAll ()
+                        .requestMatchers(
+                                "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         // Secured URLs
-                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
-                        .requestMatchers("/Api/patient/**").hasRole("PATIENT")
+                        .requestMatchers("/Api/**").hasRole("DOCTOR")
+                        .requestMatchers("/api/**").hasRole("PATIENT")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

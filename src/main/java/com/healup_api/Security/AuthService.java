@@ -56,7 +56,7 @@ public class AuthService {
 
                 // Response me Role bhi bhej dete hain taaki Frontend ko pata chale redirect kahan karna hai
                 // (Optional: Agar tu chahe to DTO ke andar bhi role daal sakta hai)
-                return ResponseEntity.ok(new ApiResponse(true, "Login Successful (Doctor) Token: " ,token));
+                return ResponseEntity.ok(new ApiResponse(true, "Token created successfully " , token));
             }
 
             // Case B: Check Patient Repository
@@ -65,7 +65,7 @@ public class AuthService {
                 String token = jwtService.generateToken(patient.getEmail());
 //                PatientResponse responseDto = patientMapper.toResponseDTO(patient);
 
-                return ResponseEntity.ok(new ApiResponse(true, "Login Successful (Patient). Token: " , token));
+                return ResponseEntity.ok(new ApiResponse(true, "Token created successfully " , token));
             }
 
             // Case C: Authentication pass hua par User DB me nahi mila (Rare case)

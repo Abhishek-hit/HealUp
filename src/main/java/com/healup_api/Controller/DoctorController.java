@@ -11,10 +11,11 @@ import com.healup_api.Service.DoctorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/Api")
 @CrossOrigin(origins = "*")
 public class DoctorController {
     @Autowired
@@ -24,10 +25,13 @@ public class DoctorController {
     @Autowired
     private  PasswordResetService passwordResetService;
     @PostMapping("/Reg")
+  //  @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> RegisDoctor(  @RequestBody DoctorRegister register){
         return doctorService.RegisterDoctor (register);
     }
+
     @GetMapping("/all")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> GetAllDoctor(){
         return doctorService.getDoctor ();
 
@@ -38,23 +42,33 @@ public class DoctorController {
 //    }
 
     @GetMapping("/{doctorId}")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> getDoctor(@PathVariable String doctorId) {
         return doctorService.FindByIDdoctor (doctorId);
     }
+    //doctor profile
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('DOCTOR')")
+    public ResponseEntity<ApiResponse> getMyProfile() {
+        return doctorService.getMyProfile();
+    }
 
     //  Get appointments by doctor
-    @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<ApiResponse> getDoctorAppointments(@PathVariable String doctorId) {
-        return doctorService.getAppointmentsByDoctor (doctorId);
+    @PreAuthorize("hasRole('DOCTOR')")
+    @GetMapping("/doctor")
+    public ResponseEntity<ApiResponse> getDoctorAppointments() {
+        return doctorService.getAppointmentsByDoctor ();
     }
 
     //set status
     @PutMapping("/{appointmentId}/status/{status}")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> updateStatus(@PathVariable String appointmentId, @PathVariable String status) {
         return doctorService.updateStatus(appointmentId, status);
     }
     //history of patient
     @GetMapping("/patient/history/{patientId}")
+    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> getPatientHistory(@PathVariable String patientId) {
         return doctorService.PatientHistory (patientId);
     }
