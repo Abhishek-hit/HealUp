@@ -34,13 +34,22 @@ public class SecurityConfig {
                 .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> auth
                         // Public URLs (No Token Needed)
+                                .requestMatchers ("/api/auth/**").permitAll ()
                         .requestMatchers("/api/auth/login").permitAll()// Patient Reg/Login
-                        .requestMatchers ("/Api/Reg").permitAll ()
-                        .requestMatchers ("/api/Reg").permitAll ()
+                        .requestMatchers ("/Api/Reg/**").permitAll ()
+                                .requestMatchers ("/Api/patient/history/**").permitAll ()
+                        .requestMatchers ("/api/Reg/**").permitAll ()//"/api/medicines"
+                        .requestMatchers ("/api/prescription/**").permitAll ()
+                                .requestMatchers ("/api/medicines/**").permitAll ()
+                        .requestMatchers ("api/appointments/book").permitAll ()
+
+                                .requestMatchers ("/api/doctors/search/**").permitAll ()
+                                .requestMatchers ("/Api/dashboard/{doctorId}").permitAll ()
+                        .requestMatchers ("api/prescription/patient/{patientId}").permitAll ()
                         .requestMatchers(
                                 "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         // Secured URLs
-                        .requestMatchers("/Api/**").hasRole("DOCTOR")
+//                        .requestMatchers("/Api/**").hasRole("DOCTOR")
                         .requestMatchers("/api/**").hasRole("PATIENT")
                         .anyRequest().authenticated()
                 )

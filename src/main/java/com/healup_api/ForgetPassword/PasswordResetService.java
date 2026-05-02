@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -42,7 +43,9 @@ public class PasswordResetService {
                     new ApiResponse(true, "If email exists, reset link sent", null)
             );
         }
-        String token= UUID.randomUUID ().toString ();
+        Random random = new Random ();
+        int otp = 1000 + random.nextInt(9000); // Ye 1000 se 9999 ke beech number dega
+        String token = String.valueOf(otp);
         ResetToken resetToken= new ResetToken();
         resetToken.setEmail(email);
         resetToken.setResetToken (token);

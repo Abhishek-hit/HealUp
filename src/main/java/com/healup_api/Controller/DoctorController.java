@@ -1,6 +1,7 @@
 package com.healup_api.Controller;
 
 import com.healup_api.API_Response.ApiResponse;
+import com.healup_api.DTO.DoctorDTOS.DoctorDashboardStatus;
 import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
 import com.healup_api.ForgetPassword.ForgetPassword;
 import com.healup_api.ForgetPassword.PasswordResetService;
@@ -68,11 +69,21 @@ public class DoctorController {
     }
     //history of patient
     @GetMapping("/patient/history/{patientId}")
-    @PreAuthorize("hasRole('DOCTOR')")
+//    @PreAuthorize("hasRole('DOCTOR')")
     public ResponseEntity<ApiResponse> getPatientHistory(@PathVariable String patientId) {
         return doctorService.PatientHistory (patientId);
     }
+// appointment count ke liye
+@GetMapping("/dashboard/{doctorId}")
+//@PreAuthorize("hasRole('DOCTOR')")
+public ResponseEntity<ApiResponse> dashboard(@PathVariable String doctorId) {
 
+    DoctorDashboardStatus stats = doctorService.getStatus(doctorId);
+
+    return ResponseEntity.ok(
+            new ApiResponse(true, "Doctor dashboard stats", stats)
+    );
+}
 
 
 

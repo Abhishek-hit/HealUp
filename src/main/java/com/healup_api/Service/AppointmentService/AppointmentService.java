@@ -44,7 +44,7 @@ public class AppointmentService {
         }
         Appointment appointment=new Appointment ();
         appointment.setAppointmentId ("API"+ UUID.randomUUID ().toString ().substring (0,5).toUpperCase (  ));
-        appointment.setStatus ("Pending");
+        appointment.setStatus ("PENDING");
         appointment.setPatientId (appt.getPatientId ( ));
         appointment.setDoctorId (appt.getDoctorId ());
         appointment.setDoctorName (doctor.getName ( ));

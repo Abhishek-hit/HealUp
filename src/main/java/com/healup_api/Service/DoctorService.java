@@ -2,6 +2,7 @@ package com.healup_api.Service;
 
 import com.healup_api.API_Response.ApiResponse;
 
+import com.healup_api.DTO.DoctorDTOS.DoctorDashboardStatus;
 import com.healup_api.DTO.DoctorDTOS.DoctorProfileResponse;
 import com.healup_api.DTO.DoctorDTOS.DoctorRegister;
 import com.healup_api.Entity.Appointment;
@@ -20,6 +21,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -138,6 +142,39 @@ public class DoctorService {
        }
            return ResponseEntity.ok(new ApiResponse(true, "Patient history fetched successfully", appointments));
 
+    }
+
+    //appointment count
+
+    public DoctorDashboardStatus getStatus(String doctorId){
+        long total=appointmentRepository.countByDoctorId (doctorId);
+
+        long pending = appointmentRepository
+                .countByDoctorIdAndStatus (doctorId, "PENDING");
+
+        long completed = appointmentRepository
+                .countByDoctorIdAndStatus (doctorId, "COMPLETED");
+
+
+        // STEP 1: Aaj ki shuruwat (00:00:00)
+        LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+
+// STEP 2: Aaj ka anth (23:59:59.999999999)
+// LocalTime.MAX zaroori hai taaki din ki aakhri second wali appointment bhi count ho jaye
+        LocalDateTime endOfDay = LocalDate.now().atTime(LocalTime.MAX);
+
+// DEBUG: Console me dekhna ki date sahi ja rahi hai ya nahi
+        System.out.println("Checking Appointments for Date: " + LocalDate.now());
+        System.out.println("Range: " + startOfDay + "  TO  " + endOfDay);
+
+// STEP 3: Database se count mango
+        long today = appointmentRepository.countByDoctorIdAndAppointmentDateTimeBetween(
+                doctorId,
+                startOfDay,
+                endOfDay
+        );
+
+        return new DoctorDashboardStatus(total, pending, completed, today);
     }
 
 
